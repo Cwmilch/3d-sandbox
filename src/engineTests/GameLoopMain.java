@@ -1,11 +1,13 @@
 package engineTests;
 
+import Models.TexturedModel;
 import engine.DisplayManager;
 import engine.ModelLoader;
-import engine.RawModel;
+import Models.RawModel;
 import engine.Renderer;
 import org.lwjgl.opengl.GL;
 import shaders.StaticShader;
+import textures.ModelTexture;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -37,7 +39,16 @@ public class GameLoopMain {
                 3, 1, 2  // Bottom right triangle
         };
 
-        RawModel model = loader.loadToVAO(vertices, indices);
+        float[] textureCoords = {
+                0.0f, 0.0f, //v0
+                0.0f, 1.0f, //v1
+                1.0f, 1.0f, //v2
+                1.0f, 0.0f  //v3
+        };
+
+        RawModel model = loader.loadToVAO(vertices, textureCoords, indices);
+        ModelTexture texture = new ModelTexture(loader.loadTexture("res/water.png"));
+        TexturedModel texturedModel = new TexturedModel(model, texture);
 
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -47,7 +58,7 @@ public class GameLoopMain {
 
             renderer.prepareFrame();
             shader.start();
-            renderer.render(model);
+            renderer.render(texturedModel);
             shader.stop();
 
             glfwSwapBuffers(window);
