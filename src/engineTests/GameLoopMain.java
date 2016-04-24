@@ -1,34 +1,35 @@
 package engineTests;
 
-import com.sun.javafx.sg.prism.NGShape;
 import engine.DisplayManager;
 import engine.ModelLoader;
 import engine.RawModel;
 import engine.Renderer;
+import org.lwjgl.opengl.GL;
+import shaders.StaticShader;
 
-import java.util.ArrayList;
-import java.util.List;
+import static org.lwjgl.glfw.Callbacks.*;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
 
 public class GameLoopMain {
 
-    private static List<ModelLoader> loaderList;
-    private static Renderer renderer;
-
     public static void main(String[] args){
-        loaderList = new ArrayList<>();
-        renderer = new Renderer();
+        Renderer renderer = new Renderer();
 
         DisplayManager m = new DisplayManager();
-        m.run();
+        m.init();
+        GL.createCapabilities();
+        long window = m.getWindow();
 
         ModelLoader loader = new ModelLoader();
-        loaderList.add(loader);
+        StaticShader shader = new StaticShader();
+
 
         float[] vertices = {
                 -0.5f, 0.5f, 0f,    //v0
                 -0.5f, -0.5f, 0f,   //v1
-                -0.5f, 0.5f, 0f,    //v2
-                0.5f, -0.5f, 0f,    //v3
+                0.5f, -0.5f, 0f,    //v2
+                0.5f, 0.5f, 0f,    //v3
         };
 
         int[] indices = {
@@ -37,14 +38,27 @@ public class GameLoopMain {
         };
 
         RawModel model = loader.loadToVAO(vertices, indices);
-        renderer.render(model);
-    }
 
-    public static List<ModelLoader> getLoaderList(){
-        return loaderList;
-    }
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-    public static Renderer getRenderer(){
-        return renderer;
+        //Render until user has attempted to close window or press escape key
+        while(!glfwWindowShouldClose(m.getWindow())){
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear framebuffer
+
+            renderer.prepareFrame();
+            shader.start();
+            renderer.render(model);
+            shader.stop();
+
+            glfwSwapBuffers(window);
+            glfwPollEvents();
+        }
+
+        shader.clearShaderCache();
+        loader.wipeLists();
+        glfwFreeCallbacks(window);
+        glfwDestroyWindow(window);
+        glfwTerminate();
+        glfwSetErrorCallback(null).free();
     }
 }

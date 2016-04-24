@@ -17,7 +17,7 @@ public class DisplayManager {
     private static long window;
 
 
-    public void run(){
+    /*public void run(){
         try{
             init();
             update();
@@ -29,9 +29,9 @@ public class DisplayManager {
             glfwTerminate();
             glfwSetErrorCallback(null).free();
         }
-    }
+    }*/
 
-    private void init(){
+    public void init(){
         GLFWErrorCallback.createPrint(System.err).set();
 
         if(!glfwInit()){
@@ -72,7 +72,7 @@ public class DisplayManager {
         glfwShowWindow(window);
     }
 
-    private void update(){
+    /*private void update(){
         //Detects context made current in current thread (purpose of line 51)
         //and makes it usable with OpenGL
         GL.createCapabilities();
@@ -88,5 +88,9 @@ public class DisplayManager {
 
             glfwPollEvents();
         }
+    }*/
+
+    public long getWindow(){
+        return window;
     }
 }
