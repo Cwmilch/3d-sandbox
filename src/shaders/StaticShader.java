@@ -3,11 +3,13 @@ package shaders;
 import entities.Camera;
 import entities.LightSource;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import utils.MathUtils;
 
 /**
  * Created by Carter Milch on 4/23/2016.
  */
+@SuppressWarnings("Duplicates")
 public class StaticShader extends AbstractShader{
 
     private static final String VERTEX_FILE = "src/shaders/VertexShader.txt";
@@ -20,6 +22,7 @@ public class StaticShader extends AbstractShader{
     private int lightColorLocation;
     private int shineDamperLocation;
     private int reflectivityLocation;
+    private int skyColorLocation;
 
 
     public StaticShader(){
@@ -42,6 +45,11 @@ public class StaticShader extends AbstractShader{
         lightColorLocation = super.getUniVariableLocation("lightColor");
         shineDamperLocation = super.getUniVariableLocation("shineDamper");
         reflectivityLocation = super.getUniVariableLocation("reflectivity");
+        skyColorLocation = super.getUniVariableLocation("skyColor");
+    }
+
+    public void loadSkyColor(float r, float g, float b){
+        super.setVectorValue(skyColorLocation, new Vector3f(r, g, b));
     }
 
     public void loadShineVariables(float damper, float reflectivity){
