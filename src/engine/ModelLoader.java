@@ -1,6 +1,6 @@
 package engine;
 
-import Models.RawModel;
+import models.RawModel;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -31,11 +31,12 @@ public class ModelLoader {
     private List<PNGDecoder> decoders = new ArrayList<>();
     private static HashMap<PNGDecoder, ByteBuffer> buffers = new HashMap<>();
 
-    public RawModel loadToVAO(float[] positions, float[] textureCoords, int[] indices){
+    public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices){
         int vaoID = createVAO();
         bindIndexBuffer(indices);
         storeVBO(0, 3, positions);
         storeVBO(1, 2, textureCoords);
+        storeVBO(2, 3, normals);
         unbindVAO();
         return new RawModel(vaoID, indices.length);
     }

@@ -15,6 +15,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class DisplayManager {
 
     private static long window;
+    private GLFWKeyCallback keyCallback;
 
 
     /*public void run(){
@@ -33,7 +34,6 @@ public class DisplayManager {
 
     public void init(){
         GLFWErrorCallback.createPrint(System.err).set();
-
         if(!glfwInit()){
             throw new IllegalStateException("Unable to initialize GLFW");
         }
@@ -48,7 +48,7 @@ public class DisplayManager {
         int height = 720;
 
         //Create window
-        window = glfwCreateWindow(width, height, "Hello world!", NULL, NULL);
+        window = glfwCreateWindow(width, height, "Test", NULL, NULL);
         if(window == NULL){
             throw new RuntimeException("Failed to create GLFW window");
         }
@@ -59,6 +59,7 @@ public class DisplayManager {
                 glfwSetWindowShouldClose(window, true); //detected in rendering loop
             }
         });
+        glfwSetKeyCallback(window, keyCallback = new Keyboard());
 
         //Get resolution of primary monitor
         GLFWVidMode vm = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -92,5 +93,9 @@ public class DisplayManager {
 
     public long getWindow(){
         return window;
+    }
+
+    public  Keyboard getKeyboard(){
+        return (Keyboard) keyCallback;
     }
 }

@@ -1,6 +1,5 @@
-package Models;
+package models;
 
-import com.sun.prism.Texture;
 import textures.ModelTexture;
 
 /**

@@ -1,11 +1,15 @@
 package shaders;
 
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.FloatBuffer;
 
 /**
  * Created by Carter Milch on 4/23/2016.
@@ -16,14 +20,24 @@ public abstract class AbstractShader {
     private int vertexShaderID;
     private int fragmentShaderID;
 
+    private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
+
     public AbstractShader(String vertexFile, String fragmentFile){
         vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER);
         fragmentShaderID = loadShader(fragmentFile, GL20.GL_FRAGMENT_SHADER);
         programID = GL20.glCreateProgram();
         GL20.glAttachShader(programID, vertexShaderID);
         GL20.glAttachShader(programID, fragmentShaderID);
+        bindAttribute();
         GL20.glLinkProgram(programID);
         GL20.glValidateProgram(programID);
+        getAllUniVariableLocations();
+    }
+
+    protected abstract void getAllUniVariableLocations();
+
+    protected int getUniVariableLocation(String varName){
+        return GL20.glGetUniformLocation(programID, varName);
     }
 
     public void start(){
@@ -47,6 +61,23 @@ public abstract class AbstractShader {
 
     protected void bindAttribute(int attribute, String variableName){
         GL20.glBindAttribLocation(programID, attribute, variableName);
+    }
+
+    protected void setFloatValue(int location, float value){
+        GL20.glUniform1f(location, value);
+    }
+
+    protected void setVectorValue(int location, Vector3f vector){
+        GL20.glUniform3f(location, vector.x, vector.y, vector.z);
+    }
+
+    protected void setBooleanValue(int location, boolean value){
+        GL20.glUniform1f(location, value ? 1.0f : 0.0f);
+    }
+
+    protected void setMatrixValue(int location, Matrix4f matrix){
+        matrix.get(matrixBuffer);
+        GL20.glUniformMatrix4fv(location, false, matrixBuffer);
     }
 
     private static int loadShader(String file, int type){

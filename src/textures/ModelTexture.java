@@ -13,6 +13,10 @@ public class ModelTexture {
 
     private PNGDecoder textureDecoder;
 
+    private float shineDamper = 1.0f;
+
+    private float reflectivity = 0.0f;
+
     public ModelTexture(PNGDecoder decoder){
         this.textureDecoder = decoder;
     }
@@ -24,4 +28,21 @@ public class ModelTexture {
     public ByteBuffer getTextureBuffer(){
         return ModelLoader.getDecoderBuffer(textureDecoder);
     }
+
+    public float getReflectivity() {
+        return reflectivity;
+    }
+
+    public void setReflectivity(float reflectivity) {
+        this.reflectivity = reflectivity;
+    }
+
+    public float getShineDamper() {
+        return shineDamper;
+    }
+
+    public void setShineDamper(float shineDamper) {
+        this.shineDamper = shineDamper;
+    }
+
 }
