@@ -1,12 +1,8 @@
 package engine;
 
-import engineTests.GameLoopMain;
 import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
 
-import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /**
@@ -17,20 +13,8 @@ public class DisplayManager {
     private static long window;
     private GLFWKeyCallback keyCallback;
 
-
-    /*public void run(){
-        try{
-            init();
-            update();
-
-            GameLoopMain.getLoaderList().forEach(ModelLoader::wipeLists);
-            glfwFreeCallbacks(window);
-            glfwDestroyWindow(window);
-        }finally {
-            glfwTerminate();
-            glfwSetErrorCallback(null).free();
-        }
-    }*/
+    private static double lastFrameTime;
+    private static double timeChange;
 
     public void init(){
         GLFWErrorCallback.createPrint(System.err).set();
@@ -71,31 +55,29 @@ public class DisplayManager {
 
         //Make window visible
         glfwShowWindow(window);
+        lastFrameTime = getCurrentTime();
     }
 
-    /*private void update(){
-        //Detects context made current in current thread (purpose of line 51)
-        //and makes it usable with OpenGL
-        GL.createCapabilities();
-
-        //Color used to clear screen
-        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
-
-        //Render until user has attempted to close window or press escape key
-        while(!glfwWindowShouldClose(window)){
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear framebuffer
-            GameLoopMain.getRenderer().prepareFrame();
-            glfwSwapBuffers(window);
-
-            glfwPollEvents();
-        }
-    }*/
 
     public long getWindow(){
         return window;
     }
 
+    public static void update(){
+        double currentFrameTime = getCurrentTime();
+        timeChange  = (currentFrameTime - lastFrameTime) / 1000f;
+        lastFrameTime = currentFrameTime;
+    }
+
+    public static double getFrameTime(){
+        return timeChange;
+    }
+
     public  Keyboard getKeyboard(){
         return (Keyboard) keyCallback;
+    }
+
+    private static double getCurrentTime(){
+        return GLFW.glfwGetTime() * 1000L;
     }
 }

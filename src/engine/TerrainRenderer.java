@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import shaders.TerrainShader;
+import shaders.terrain.TerrainShader;
 import terrain.Terrain;
 import textures.ModelTexture;
 import utils.MathUtils;

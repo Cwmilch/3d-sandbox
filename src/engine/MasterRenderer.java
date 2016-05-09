@@ -1,6 +1,5 @@
 package engine;
 
-import engineTests.GameLoopMain;
 import entities.Camera;
 import entities.Entity;
 import entities.LightSource;
@@ -8,8 +7,9 @@ import models.TexturedModel;
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import shaders.StaticShader;
-import shaders.TerrainShader;
+import shaders.terrain.TerrainShader;
 import terrain.Terrain;
+import textures.skybox.SkyboxRenderer;
 
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -18,19 +18,21 @@ import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 import static org.lwjgl.opengl.GL11.*;
+import static engine.Main.*;
 
 /**
  * Created by Carter Milch on 5/2/2016.
  */
+@SuppressWarnings("Duplicates")
 public class MasterRenderer {
 
-    private static final float FIELD_OF_VIEW = 80.0f;
+    public static final float FIELD_OF_VIEW = 80.0f;
     private static final float NEAR_PLANE = 0.1F;
     private static final float FAR_PLANE = 1000f;
 
-    private static final float RED = 0.5f;
-    private static final float GREEN = 0.5f;
-    private static final float BLUE = 1.0f;
+    public static final float RED = 0.3f;
+    public static final float GREEN = 0.3f;
+    public static final float BLUE = 0.37f;
 
     private Matrix4f projMatrix;
 
@@ -43,12 +45,23 @@ public class MasterRenderer {
     private HashMap<TexturedModel, List<Entity>> entities = new HashMap<>();
     private List<Terrain> terrains = new ArrayList<>();
 
-    public MasterRenderer(){
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
+    private SkyboxRenderer skyboxRenderer;
+
+    public MasterRenderer(ModelLoader loader){
+        enableCulling();
         createProjectionMatrix();
         renderer = new EntityRenderer(shader, projMatrix);
         terrainRenderer = new TerrainRenderer(terrainShader, projMatrix);
+        skyboxRenderer = new SkyboxRenderer(loader, projMatrix);
+    }
+
+    public static void enableCulling(){
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+    }
+
+    public static void disableCulling(){
+        glDisable(GL_CULL_FACE);
     }
 
     public void prepareFrame(){
@@ -57,20 +70,21 @@ public class MasterRenderer {
         glClearColor(RED, GREEN, BLUE, 1);
     }
 
-    public void render(LightSource light, Camera camera){
+    public void render(List<LightSource> lights, Camera camera){
         prepareFrame();
         shader.start();
         shader.loadSkyColor(RED, GREEN, BLUE);
-        shader.loadLight(light);
+        shader.loadLights(lights);
         shader.loadViewMatrix(camera);
         renderer.render(entities);
         shader.stop();
         terrainShader.start();
         terrainShader.loadSkyColor(RED, GREEN, BLUE);
-        terrainShader.loadLight(light);
+        terrainShader.loadLights(lights);
         terrainShader.loadViewMatrix(camera);
         terrainRenderer.render(terrains);
         terrainShader.stop();
+        skyboxRenderer.render(camera);
         terrains.clear();
         entities.clear();
     }
@@ -94,7 +108,7 @@ public class MasterRenderer {
     private void createProjectionMatrix(){
         IntBuffer w = BufferUtils.createIntBuffer(1);
         IntBuffer h = BufferUtils.createIntBuffer(1);
-        long window = GameLoopMain.getWindow();
+        long window = getWindow();
         glfwGetWindowSize(window, w, h);
         int width = w.get(0);
         int height = h.get(0);

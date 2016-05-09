@@ -9,6 +9,8 @@ public class TexturedModel {
 
     private RawModel rawModel;
     private ModelTexture texture;
+    private int width = 0;
+    private int height = 0;
 
     public TexturedModel(RawModel model, ModelTexture texture){
         rawModel = model;
@@ -21,5 +23,21 @@ public class TexturedModel {
 
     public ModelTexture getTexture() {
         return texture;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 }

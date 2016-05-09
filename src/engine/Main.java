@@ -1,4 +1,4 @@
-package engineTests;
+package engine;
 
 import engine.*;
 import entities.Camera;
@@ -11,11 +11,14 @@ import org.lwjgl.opengl.GL;
 import terrain.Terrain;
 import textures.ModelTexture;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
-public class GameLoopMain {
+public class Main {
 
     private static DisplayManager m;
 
@@ -27,17 +30,28 @@ public class GameLoopMain {
 
         ModelLoader loader = new ModelLoader();
 
-        RawModel model = OBJLoader.loadOBJModel("cube", loader);
-        ModelTexture blank = new ModelTexture(loader.loadTexture("res/water.png"));
+        RawModel mainRaw = OBJLoader.loadOBJModel("cylinder", loader);
+        RawModel lamp = OBJLoader.loadOBJModel("lamp", loader);
 
-        TexturedModel texturedModel = new TexturedModel(model, blank);
-        /*ModelTexture texture = texturedModel.getTexture();
-        texture.setShineDamper(15.0f);
-        texture.setReflectivity(5.0f);*/
+        ModelTexture blank = new ModelTexture(loader.loadTexture("res/stone.png"));
+        ModelTexture lampTexture = new ModelTexture(loader.loadTexture("res/lamp.png"));
+
+        TexturedModel texturedModel = new TexturedModel(mainRaw, blank);
+
+        List<Entity> entities = new ArrayList<>();
+
+        Entity main = new Entity(texturedModel, new Vector3f(10, 2, -30), 0, 0, 0, 1);
+        Entity lampA = new Entity(new TexturedModel(lamp, lampTexture), new Vector3f(5, 0, -30), 0, 0, 0, 1);
+        lampA.getModel().getTexture().setUseFakeLighting(true);
+        entities.add(main);
+        entities.add(lampA);
 
 
-        Entity entity = new Entity(texturedModel, new Vector3f(0, 3, -30), 0, 0, 0, 1);
-        LightSource light = new LightSource(new Vector3f(0, 0, -25), new Vector3f(1, 1, 1));
+        List<LightSource> lights = new ArrayList<>();
+        LightSource sun = new LightSource(new Vector3f(0, 40, 5), new Vector3f(0.75f, 0.65f, 0.65f));
+        LightSource light = new LightSource(new Vector3f(5, 14, -30), new Vector3f(0, 1, 0));
+        lights.add(sun);
+        lights.add(light);
 
         Terrain terrain = new Terrain(0, -1, loader, new ModelTexture(loader.loadTexture("res/terrainStone.png")));
         Terrain terrain1 = new Terrain(-1, -1, loader, new ModelTexture(loader.loadTexture("res/terrainStone.png")));
@@ -46,18 +60,21 @@ public class GameLoopMain {
 
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-        MasterRenderer renderer = new MasterRenderer();
+        MasterRenderer renderer = new MasterRenderer(loader);
         //Render until user has attempted to close window or press escape key
         while(!glfwWindowShouldClose(m.getWindow())){
+            DisplayManager.update();
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear framebuffer
-            entity.increaseRotation(0, 1, 0);
+            //main.increaseRotation(0, 1, 0);
             camera.move();
 
+            //TODO render all in Master method
             renderer.processTerrains(terrain);
             renderer.processTerrains(terrain1);
-            renderer.processEntity(entity); //has to be called for all entities
+            //has to be called for all entities
+            entities.forEach(renderer::processEntity);
 
-            renderer.render(light, camera);
+            renderer.render(lights, camera);
 
             glfwSwapBuffers(window);
             glfwPollEvents();

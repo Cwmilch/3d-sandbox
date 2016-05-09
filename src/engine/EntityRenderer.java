@@ -21,6 +21,7 @@ import static org.lwjgl.opengl.GL11.*;
 /**
  * Created by Carter Milch on 4/23/2016.
  */
+@SuppressWarnings("Duplicates")
 public class EntityRenderer {
 
     private StaticShader shader;
@@ -54,19 +55,23 @@ public class EntityRenderer {
         GL20.glEnableVertexAttribArray(2);
 
         ModelTexture texture = texturedModel.getTexture();
+        if(texture.hasTransparency()){
+            MasterRenderer.disableCulling();
+        }
+        shader.loadFakeLighting(texture.usesFakeLighting());
         shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
 
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, decoder.getWidth(), decoder.getHeight(), 0, GL_RGBA,
                 GL_UNSIGNED_BYTE, texturedModel.getTexture().getTextureBuffer());
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
-
+        texturedModel.setHeight(decoder.getHeight());
+        texturedModel.setWidth(decoder.getWidth());
     }
 
     private void unbindTexturedModel(){
+        MasterRenderer.enableCulling();
         GL20.glDisableVertexAttribArray(0);
         GL20.glDisableVertexAttribArray(1);
         GL20.glDisableVertexAttribArray(2);

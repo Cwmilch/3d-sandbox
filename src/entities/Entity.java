@@ -81,4 +81,12 @@ public class Entity {
     public void setScale(float scale) {
         this.scale = scale;
     }
+
+    public float getTextureXOffset(){
+        return 0;
+    }
+
+    public float getTextureYOffset(){
+        return 0;
+    }
 }

@@ -1,7 +1,9 @@
 package shaders;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
@@ -63,12 +65,20 @@ public abstract class AbstractShader {
         GL20.glBindAttribLocation(programID, attribute, variableName);
     }
 
+    protected void setIntValue(int location, int value){
+        GL20.glUniform1i(location, value);
+    }
+
     protected void setFloatValue(int location, float value){
         GL20.glUniform1f(location, value);
     }
 
     protected void setVectorValue(int location, Vector3f vector){
         GL20.glUniform3f(location, vector.x, vector.y, vector.z);
+    }
+
+    protected void setVectorValue(int location, Vector4f vector){
+        GL20.glUniform4f(location, vector.x, vector.y, vector.z, vector.w);
     }
 
     protected void setBooleanValue(int location, boolean value){
@@ -78,6 +88,10 @@ public abstract class AbstractShader {
     protected void setMatrixValue(int location, Matrix4f matrix){
         matrix.get(matrixBuffer);
         GL20.glUniformMatrix4fv(location, false, matrixBuffer);
+    }
+
+    public void set2DVectorValue(int location, Vector2f value) {
+        GL20.glUniform2f(location, value.x, value.y);
     }
 
     private static int loadShader(String file, int type){

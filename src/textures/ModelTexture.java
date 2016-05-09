@@ -14,11 +14,29 @@ public class ModelTexture {
     private PNGDecoder textureDecoder;
 
     private float shineDamper = 1.0f;
-
     private float reflectivity = 0.0f;
+
+    private boolean hasTransparency = false;
+    private boolean useFakeLighting = false;
 
     public ModelTexture(PNGDecoder decoder){
         this.textureDecoder = decoder;
+    }
+
+    public boolean usesFakeLighting() {
+        return useFakeLighting;
+    }
+
+    public void setUseFakeLighting(boolean useFakeLighting) {
+        this.useFakeLighting = useFakeLighting;
+    }
+
+    public boolean hasTransparency() {
+        return hasTransparency;
+    }
+
+    public void setHasTransparency(boolean hasTransparency) {
+        this.hasTransparency = hasTransparency;
     }
 
     public PNGDecoder getTextureDecoder() {
