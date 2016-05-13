@@ -39,18 +39,6 @@ public class ModelLoader {
         return new RawModel(vaoID, indices.length);
     }
 
-    public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals,
-                              float[] tangents, int[] indices) {
-        int vaoID = createVAO();
-        bindIndexBuffer(indices);
-        storeVBO(0, 3, positions);
-        storeVBO(1, 2, textureCoords);
-        storeVBO(2, 3, normals);
-        storeVBO(3, 3, tangents);
-        unbindVAO();
-        return new RawModel(vaoID, indices.length);
-    }
-
     public RawModel loadToVAO(float[] positions, int dimensions){
         int vaoID = createVAO();
         this.storeVBO(0, dimensions, positions);
@@ -60,7 +48,7 @@ public class ModelLoader {
 
     public PNGDecoder loadTexture(String fileName){
         try {
-            InputStream in = new FileInputStream(fileName);
+            InputStream in = new FileInputStream("res/" + fileName + ".png");
             PNGDecoder decoder = new PNGDecoder(in);
 
             ByteBuffer buffer = ByteBuffer.allocateDirect(4 * decoder.getWidth() * decoder.getHeight());
@@ -121,6 +109,7 @@ public class ModelLoader {
         vaoList.forEach(GL30::glDeleteVertexArrays);
         vboList.forEach(GL15::glDeleteBuffers);
         decoders.clear();
+        buffers.clear();
     }
 
     private int createVAO(){

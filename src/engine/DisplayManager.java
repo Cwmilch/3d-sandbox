@@ -73,7 +73,7 @@ public class DisplayManager {
         return timeChange;
     }
 
-    public  Keyboard getKeyboard(){
+    public Keyboard getKeyboard(){
         return (Keyboard) keyCallback;
     }
 

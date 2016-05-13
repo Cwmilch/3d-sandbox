@@ -3,12 +3,14 @@ package engine;
 import entities.Camera;
 import entities.Entity;
 import entities.LightSource;
+import models.RawModel;
 import models.TexturedModel;
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import shaders.StaticShader;
 import shaders.terrain.TerrainShader;
 import terrain.Terrain;
+import textures.ModelTexture;
 import textures.skybox.SkyboxRenderer;
 
 import java.nio.IntBuffer;
@@ -89,7 +91,7 @@ public class MasterRenderer {
         entities.clear();
     }
 
-    public void processTerrains(Terrain terrain){
+    public void processTerrain(Terrain terrain){
         terrains.add(terrain);
     }
 
@@ -130,5 +132,12 @@ public class MasterRenderer {
     public void cleanShaders(){
         shader.clearShaderCache();
         terrainShader.clearShaderCache();
+    }
+
+    public static TexturedModel makeTexturedModel(String model, String texture){
+        ModelLoader m = Driver.getLoader();
+        RawModel rawModel = OBJLoader.loadOBJModel(model, m);
+        ModelTexture modelTexture = new ModelTexture(m.loadTexture(texture));
+        return new TexturedModel(rawModel, modelTexture);
     }
 }

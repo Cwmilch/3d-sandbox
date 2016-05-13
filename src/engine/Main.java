@@ -1,6 +1,5 @@
 package engine;
 
-import engine.*;
 import entities.Camera;
 import entities.Entity;
 import entities.LightSource;
@@ -22,7 +21,7 @@ public class Main {
 
     private static DisplayManager m;
 
-    public static void main(String[] args){
+    public static void init(List<Entity> entities){
         m = new DisplayManager();
         m.init();
         GL.createCapabilities();
@@ -33,12 +32,10 @@ public class Main {
         RawModel mainRaw = OBJLoader.loadOBJModel("cylinder", loader);
         RawModel lamp = OBJLoader.loadOBJModel("lamp", loader);
 
-        ModelTexture blank = new ModelTexture(loader.loadTexture("res/stone.png"));
-        ModelTexture lampTexture = new ModelTexture(loader.loadTexture("res/lamp.png"));
+        ModelTexture blank = new ModelTexture(loader.loadTexture("stone"));
+        ModelTexture lampTexture = new ModelTexture(loader.loadTexture("lamp"));
 
         TexturedModel texturedModel = new TexturedModel(mainRaw, blank);
-
-        List<Entity> entities = new ArrayList<>();
 
         Entity main = new Entity(texturedModel, new Vector3f(10, 2, -30), 0, 0, 0, 1);
         Entity lampA = new Entity(new TexturedModel(lamp, lampTexture), new Vector3f(5, 0, -30), 0, 0, 0, 1);
@@ -53,8 +50,8 @@ public class Main {
         lights.add(sun);
         lights.add(light);
 
-        Terrain terrain = new Terrain(0, -1, loader, new ModelTexture(loader.loadTexture("res/terrainStone.png")));
-        Terrain terrain1 = new Terrain(-1, -1, loader, new ModelTexture(loader.loadTexture("res/terrainStone.png")));
+        Terrain terrain = new Terrain(0, -1, loader, new ModelTexture(loader.loadTexture("terrainStone")));
+        Terrain terrain1 = new Terrain(-1, -1, loader, new ModelTexture(loader.loadTexture("terrainStone")));
 
         Camera camera = new Camera();
 
@@ -69,8 +66,8 @@ public class Main {
             camera.move();
 
             //TODO render all in Master method
-            renderer.processTerrains(terrain);
-            renderer.processTerrains(terrain1);
+            renderer.processTerrain(terrain);
+            renderer.processTerrain(terrain1);
             //has to be called for all entities
             entities.forEach(renderer::processEntity);
 

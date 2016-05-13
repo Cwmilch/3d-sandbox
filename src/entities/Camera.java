@@ -24,8 +24,7 @@ public class Camera {
     private double currentSpeedUpwards = 0F;
 
     private float pitch;
-    private float yaw= 0.0F;
-    private float roll;
+    private float yaw = 0.0F;
 
     private double prevX;
     private double prevY;
@@ -50,15 +49,15 @@ public class Camera {
         boolean upPress = false;
         double dt = DisplayManager.getFrameTime();
         if(Keyboard.isKeyDown(GLFW_KEY_W)){
-            walkBackwards(MOVE_SPEED * dt);
+            moveBackwards(MOVE_SPEED * dt);
         }else if(Keyboard.isKeyDown(GLFW_KEY_S)){
-            walkForwards(MOVE_SPEED * dt);
+            moveForwards(MOVE_SPEED * dt);
         }
 
         if(Keyboard.isKeyDown(GLFW_KEY_A)){
-            strafeRight(MOVE_SPEED * dt);
+            moveRight(MOVE_SPEED * dt);
         }else if(Keyboard.isKeyDown(GLFW_KEY_D)){
-            strafeLeft(MOVE_SPEED * dt);
+            moveLeft(MOVE_SPEED * dt);
         }
 
         if(Keyboard.isKeyDown(GLFW_KEY_SPACE)){
@@ -70,22 +69,6 @@ public class Camera {
         }
 
         currentSpeedUpwards = upPress ? currentSpeedUpwards : 0;
-    }
-
-    public Vector3f getPosition() {
-        return position;
-    }
-
-    public float getPitch() {
-        return pitch;
-    }
-
-    public float getYaw() {
-        return yaw;
-    }
-
-    public float getRoll() {
-        return roll;
     }
 
     private void changeAngle(){
@@ -120,23 +103,37 @@ public class Camera {
         glfwSetCursorPos(getWindow(), 800/2, 600/2);
     }
 
-    public void walkForwards(double distance){
+    public void moveForwards(double distance){
         position.x -= distance * (float)Math.sin(Math.toRadians(yaw));
         position.z += distance * (float)Math.cos(Math.toRadians(yaw));
     }
 
-    public void walkBackwards(double distance){
+    public void moveBackwards(double distance){
         position.x += distance * (float)Math.sin(Math.toRadians(yaw));
         position.z -= distance * (float)Math.cos(Math.toRadians(yaw));
     }
 
-    public void strafeLeft(double distance){
+    public void moveLeft(double distance){
         position.x -= distance * (float)Math.sin(Math.toRadians(yaw-90));
         position.z += distance * (float)Math.cos(Math.toRadians(yaw-90));
     }
 
-    public void strafeRight(double distance) {
+    public void moveRight(double distance) {
         position.x -= distance * (float)Math.sin(Math.toRadians(yaw+90));
         position.z += distance * (float)Math.cos(Math.toRadians(yaw+90));
     }
+    
+    public Vector3f getPosition() {
+        return position;
+    }
+
+    public float getPitch() {
+        return pitch;
+    }
+
+    public float getYaw() {
+        return yaw;
+    }
+
+
 }
