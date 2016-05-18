@@ -15,7 +15,7 @@ public class Driver {
     private static DisplayManager m;
     private static ModelLoader loader;
 
-    public static void main(String[] args){
+    /*public static void main(String[] args){
         m = new DisplayManager();
         m.init();
         GL.createCapabilities();
@@ -34,7 +34,7 @@ public class Driver {
             }
         });
         f.setVisible(true);
-    }
+    }*/
 
     public static ModelLoader getLoader(){
         return loader;

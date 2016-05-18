@@ -3,6 +3,9 @@ package engine;
 import entities.Camera;
 import entities.Entity;
 import entities.LightSource;
+import gui.Main;
+import gui.Shape;
+import gui.Texture;
 import models.RawModel;
 import models.TexturedModel;
 import org.joml.Matrix4f;
@@ -20,7 +23,7 @@ import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 import static org.lwjgl.opengl.GL11.*;
-import static engine.Main.*;
+import static engine.EngineMain.*;
 
 /**
  * Created by Carter Milch on 5/2/2016.
@@ -36,6 +39,8 @@ public class MasterRenderer {
     public static final float GREEN = 0.3f;
     public static final float BLUE = 0.37f;
 
+    private static HashMap<String, TexturedModel> modelMap = new HashMap<>();
+
     private Matrix4f projMatrix;
 
     private StaticShader shader = new StaticShader();
@@ -50,6 +55,7 @@ public class MasterRenderer {
     private SkyboxRenderer skyboxRenderer;
 
     public MasterRenderer(ModelLoader loader){
+        setModelMap();
         enableCulling();
         createProjectionMatrix();
         renderer = new EntityRenderer(shader, projMatrix);
@@ -134,10 +140,39 @@ public class MasterRenderer {
         terrainShader.clearShaderCache();
     }
 
-    public static TexturedModel makeTexturedModel(String model, String texture){
-        ModelLoader m = Driver.getLoader();
+    private static TexturedModel makeTexturedModel(String model, String texture){
+        ModelLoader m = Main.getLoader();
         RawModel rawModel = OBJLoader.loadOBJModel(model, m);
         ModelTexture modelTexture = new ModelTexture(m.loadTexture(texture));
         return new TexturedModel(rawModel, modelTexture);
+    }
+
+    public static TexturedModel getModel(Shape shape, Texture texture){
+        String s = shape.toString().toUpperCase();
+        String t = texture.toString().toUpperCase();
+        String var = s + "_" + t;
+        return modelMap.get(var);
+    }
+
+    private void setModelMap(){
+        modelMap.put("CUBE_STONE", makeTexturedModel("cube", "stone"));
+        modelMap.put("CUBE_WATER", makeTexturedModel("cube", "water"));
+        modelMap.put("CUBE_BRICK", makeTexturedModel("cube", "brick"));
+        modelMap.put("CUBE_GRASS", makeTexturedModel("cube", "grass"));
+
+        modelMap.put("SPHERE_STONE", makeTexturedModel("sphere", "stone"));
+        modelMap.put("SPHERE_WATER", makeTexturedModel("sphere", "water"));
+        modelMap.put("SPHERE_BRICK", makeTexturedModel("sphere", "brick"));
+        modelMap.put("SPHERE_GRASS", makeTexturedModel("sphere", "grass"));
+
+        modelMap.put("CYLINDER_STONE", makeTexturedModel("cylinder", "stone"));
+        modelMap.put("CYLINDER_WATER", makeTexturedModel("cylinder", "water"));
+        modelMap.put("CYLINDER_BRICK", makeTexturedModel("cylinder", "brick"));
+        modelMap.put("CYLINDER_GRASS", makeTexturedModel("cylinder", "grass"));
+
+        modelMap.put("CONE_STONE", makeTexturedModel("cone", "stone"));
+        modelMap.put("CONE_WATER", makeTexturedModel("cone", "water"));
+        modelMap.put("CONE_BRICK", makeTexturedModel("cone", "brick"));
+        modelMap.put("CONE_GRASS", makeTexturedModel("cone", "grass"));
     }
 }

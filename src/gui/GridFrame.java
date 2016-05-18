@@ -1,8 +1,10 @@
 package gui;
 
+import engine.EngineMain;
 import engine.MasterRenderer;
 import entities.Entity;
 import models.TexturedModel;
+import org.joml.Vector3f;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,22 +12,34 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Carter Milch on 5/9/2016.
  */
 public class GridFrame extends JPanel {
+    public static ArrayList<GridFrame> frames = new ArrayList<>();
+
     private static final int NUM_BUTTONS = 32;
+    private static int nextLayer = 0;
 
     private HashMap<Integer, Shape> shapes = new HashMap<>();
     private HashMap<Integer, Texture> textures = new HashMap<>();
 
-    IDButton[][] buttons;
+    private ArrayList<Entity> entityList = new ArrayList<>();
 
-    public GridFrame(){
+    private IDButton[][] buttons;
+    private JFrame jFrame;
+    private int layer;
+
+    public GridFrame(JFrame frame){
+        jFrame = frame;
+
+        layer = nextLayer;
+        nextLayer++;
+
         int nextID = 0;
         buttons = new IDButton[NUM_BUTTONS][NUM_BUTTONS];
+
         GridLayout layout = new GridLayout(32, 32, 0, 0);
         setLayout(layout);
         for(int i = 0; i < NUM_BUTTONS; i++){
@@ -44,6 +58,8 @@ public class GridFrame extends JPanel {
                 add(buttons[i][j]);
             }
         }
+
+        initMenu();
     }
 
     private class SelectionListener implements ActionListener{
@@ -51,7 +67,7 @@ public class GridFrame extends JPanel {
         public void actionPerformed(ActionEvent e) {
             JFrame f = new JFrame();
             f.setContentPane(new SelectionPanel(gui.GridFrame.this, (IDButton)e.getSource()));
-            f.setSize(275, 400);
+            f.setSize(200, 100);
             f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             f.setVisible(true);
         }
@@ -68,31 +84,67 @@ public class GridFrame extends JPanel {
     }
 
     public void processInput(){
-        float cube_offset = -0.4f;
-        HashMap<TexturedModel, List<Entity>> entities = new HashMap<>();
-
-        ArrayList<Entity> cubes = new ArrayList<>();
-        TexturedModel cubeStone = MasterRenderer.makeTexturedModel("cube", "stone");
-        TexturedModel cubeWater = MasterRenderer.makeTexturedModel("cube", "water");
-        TexturedModel cubeBrick = MasterRenderer.makeTexturedModel("cube", "brick");
-        TexturedModel cubeGrass = MasterRenderer.makeTexturedModel("cube", "grass");
-
-        ArrayList<Entity> spheres = new ArrayList<>();
-        TexturedModel sphereStone = MasterRenderer.makeTexturedModel("sphere", "stone");
-        TexturedModel sphere;
-
-        ArrayList<Entity> cylinders = new ArrayList<>();
-
-
-        ArrayList<Entity> cones = new ArrayList<>();
+        float cube_offset = -0.3f;
 
         for(IDButton[] button : buttons){
-            for(IDButton b : button){
-                Shape s = shapes.get(b.getID());
-                Texture t = textures.get(b.getID());
+            for(IDButton b : button) {
+                if (shapes.get(b.getID()) != Shape.AIR) {
+                    Shape s = shapes.get(b.getID());
+                    Texture t = textures.get(b.getID());
+                    int id = b.getID();
+                    float xPos = (id % NUM_BUTTONS) * 4.0f;
+                    float yPos = (id / NUM_BUTTONS) * 4.0f;
+                    float zPos = -30 - (layer * 4);
+                    Vector3f pos = new Vector3f(xPos, yPos, zPos);
 
+                    TexturedModel model = MasterRenderer.getModel(s, t);
+                    switch (s) {
+                        case CONE:
+                            entityList.add(new Entity(model, pos, 0, 0, 0, 1));
+                            break;
+                        case CUBE:
+                            Vector3f cubePos = new Vector3f(xPos, yPos + cube_offset, zPos);
+                            entityList.add(new Entity(model, cubePos, 0, 0, 0, 1));
+                            break;
+                        case CYLINDER:
+                            entityList.add(new Entity(model, pos, 0, 0, 0, 1));
+                            break;
+                        case SPHERE:
+                            entityList.add(new Entity(model, pos, 0, 0, 0, 1));
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
         }
+    }
+
+    public void initMenu(){
+        JMenuBar menu = new JMenuBar();
+
+        JMenu options = new JMenu("Options");
+
+        JMenuItem newLayer = new JMenuItem("New Layer");
+        newLayer.addActionListener(e -> {
+            JFrame f = new JFrame("Layer " + (nextLayer + 1));
+            GridFrame g = new GridFrame(f);
+            f.setContentPane(g);
+            f.setSize(416, 416);
+            f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            f.setVisible(true);
+            frames.add(g);
+        });
+
+        JMenuItem render = new JMenuItem("Render All");
+        render.addActionListener(e -> EngineMain.init());
+
+        options.add(newLayer);
+        options.add(render);
+
+        menu.add(options);
+
+        jFrame.setJMenuBar(menu);
     }
 
     public HashMap<Integer, Shape> getShapes() {
@@ -103,4 +155,7 @@ public class GridFrame extends JPanel {
         return textures;
     }
 
+    public ArrayList<Entity> getEntities(){
+        return entityList;
+    }
 }

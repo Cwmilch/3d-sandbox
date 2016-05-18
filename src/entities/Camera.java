@@ -8,7 +8,7 @@ import org.lwjgl.BufferUtils;
 import java.nio.DoubleBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static engine.Main.*;
+import static engine.EngineMain.*;
 
 /**
  * Created by Carter Milch on 4/29/2016.
@@ -16,7 +16,7 @@ import static engine.Main.*;
 @SuppressWarnings("Duplicates")
 public class Camera {
 
-    private Vector3f position = new Vector3f(0, 1, 0);
+    private Vector3f position = new Vector3f(0, 1, -30);
     private static final double MOVE_SPEED = 20D;
 
     private static final double TERRAIN_HEIGHT = 0F;
