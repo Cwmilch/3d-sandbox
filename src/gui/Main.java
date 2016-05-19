@@ -24,13 +24,6 @@ public class Main {
         f.setContentPane(g);
         f.setSize(416, 416);
         f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        f.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e){
-                super.windowClosing(e);
-                EngineMain.init();
-            }
-        });
         f.setVisible(true);
     }
 

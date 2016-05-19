@@ -15,7 +15,7 @@ import java.util.List;
 @SuppressWarnings("Duplicates")
 public class TerrainShader extends AbstractShader {
 
-    private static final int MAX_LIGHTS = 6;
+    private static final int MAX_LIGHTS = 10;
 
     private static final String VERTEX_FILE = "src/shaders/terrain/TerrainVertexShader.txt";
     private static final String FRAGMENT_FILE = "src/shaders/terrain/TerrainFragmentShader.txt";

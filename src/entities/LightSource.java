@@ -22,6 +22,10 @@ public class LightSource {
         this.attenuation = attenuation;
     }
 
+    public void setColor(Vector3f color){
+        this.color = color;
+    }
+
     public Vector3f getPosition() {
         return position;
     }

@@ -8,7 +8,8 @@ public enum Shape {
     CUBE("Cube"),
     SPHERE("Sphere"),
     CYLINDER("Cylinder"),
-    CONE("Cone");
+    CONE("Cone"),
+    LIGHT("Light");
 
     private String name;
 
@@ -26,6 +27,8 @@ public enum Shape {
                 return CYLINDER;
             case 4:
                 return CONE;
+            case 5:
+                return LIGHT;
         }
         return AIR;
     }
@@ -48,6 +51,8 @@ public enum Shape {
                 return 3;
             case CONE:
                 return 4;
+            case LIGHT:
+                return 5;
         }
         return 0;
     }

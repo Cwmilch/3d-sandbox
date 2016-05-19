@@ -3,13 +3,13 @@ package gui;
 import engine.EngineMain;
 import engine.MasterRenderer;
 import entities.Entity;
+import entities.LightSource;
 import models.TexturedModel;
 import org.joml.Vector3f;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,15 +17,16 @@ import java.util.HashMap;
  * Created by Carter Milch on 5/9/2016.
  */
 public class GridFrame extends JPanel {
+    public static final int NUM_BUTTONS = 32;
     public static ArrayList<GridFrame> frames = new ArrayList<>();
 
-    private static final int NUM_BUTTONS = 32;
     private static int nextLayer = 0;
 
     private HashMap<Integer, Shape> shapes = new HashMap<>();
     private HashMap<Integer, Texture> textures = new HashMap<>();
 
-    private ArrayList<Entity> entityList = new ArrayList<>();
+    private static ArrayList<Entity> entityList = new ArrayList<>();
+    private static ArrayList<LightSource> lightList = new ArrayList<>();
 
     private IDButton[][] buttons;
     private JFrame jFrame;
@@ -112,6 +113,8 @@ public class GridFrame extends JPanel {
                         case SPHERE:
                             entityList.add(new Entity(model, pos, 0, 0, 0, 1));
                             break;
+                        case LIGHT:
+                            break; //Already added by selection panel
                         default:
                             break;
                     }
@@ -155,7 +158,19 @@ public class GridFrame extends JPanel {
         return textures;
     }
 
-    public ArrayList<Entity> getEntities(){
+    public static ArrayList<Entity> getEntities(){
         return entityList;
+    }
+
+    public static ArrayList<LightSource> getLights(){
+        return lightList;
+    }
+
+    public int getLayer(){
+        return layer;
+    }
+
+    public void addLight(LightSource s){
+        lightList.add(s);
     }
 }

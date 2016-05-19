@@ -16,7 +16,7 @@ import static engine.EngineMain.*;
 @SuppressWarnings("Duplicates")
 public class Camera {
 
-    private Vector3f position = new Vector3f(0, 1, -30);
+    private Vector3f position = new Vector3f(0, 1, 0);
     private static final double MOVE_SPEED = 20D;
 
     private static final double TERRAIN_HEIGHT = 0F;
