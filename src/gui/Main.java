@@ -1,11 +1,8 @@
 package gui;
 
-import engine.EngineMain;
 import engine.ModelLoader;
 
 import javax.swing.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 /**
  * Created by Carter Milch on 5/9/2016.

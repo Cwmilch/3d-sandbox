@@ -27,6 +27,7 @@ public class ModelLoader {
     private List<Integer> vboList = new ArrayList<>();
 
     private List<PNGDecoder> decoders = new ArrayList<>();
+
     private static HashMap<PNGDecoder, ByteBuffer> buffers = new HashMap<>();
 
     public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices){

@@ -2,6 +2,8 @@ package entities;
 
 import org.joml.Vector3f;
 
+import java.awt.*;
+
 /**
  * Created by Carter Milch on 5/2/2016.
  */
@@ -32,6 +34,10 @@ public class LightSource {
 
     public Vector3f getColor() {
         return color;
+    }
+
+    public Color getRGBColor(){
+        return new Color(color.x * 100, color.y * 100, color.z * 100);
     }
 
     public Vector3f getAttenuation() {

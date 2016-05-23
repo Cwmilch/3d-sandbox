@@ -1,24 +1,17 @@
 package engine;
 
 import entities.Camera;
-import entities.Entity;
 import entities.LightSource;
 import gui.GridFrame;
-import gui.Main;
-import gui.Shape;
-import gui.Texture;
-import models.TexturedModel;
-import models.RawModel;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
 import terrain.Terrain;
 import textures.ModelTexture;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import static org.lwjgl.glfw.Callbacks.*;
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -71,6 +64,7 @@ public class EngineMain {
         glfwDestroyWindow(window);
         glfwTerminate();
         glfwSetErrorCallback(null).free();
+        System.exit(0);
     }
 
     public static long getWindow(){

@@ -85,7 +85,11 @@ public class GridFrame extends JPanel {
     }
 
     public void processInput(){
-        float cube_offset = -0.3f;
+        SwingUtilities.getWindowAncestor(this).setVisible(false);
+
+        float cubeYOffset = -0.3f;
+        float sphereXOffset = 1.9f;
+        float sphereYOffset = 2.0f;
 
         for(IDButton[] button : buttons){
             for(IDButton b : button) {
@@ -94,7 +98,7 @@ public class GridFrame extends JPanel {
                     Texture t = textures.get(b.getID());
                     int id = b.getID();
                     float xPos = (id % NUM_BUTTONS) * 4.0f;
-                    float yPos = (id / NUM_BUTTONS) * 4.0f;
+                    float yPos = ((id / NUM_BUTTONS) * 4.0f);
                     float zPos = -30 - (layer * 4);
                     Vector3f pos = new Vector3f(xPos, yPos, zPos);
 
@@ -104,14 +108,15 @@ public class GridFrame extends JPanel {
                             entityList.add(new Entity(model, pos, 0, 0, 0, 1));
                             break;
                         case CUBE:
-                            Vector3f cubePos = new Vector3f(xPos, yPos + cube_offset, zPos);
+                            Vector3f cubePos = new Vector3f(xPos, yPos + cubeYOffset, zPos);
                             entityList.add(new Entity(model, cubePos, 0, 0, 0, 1));
                             break;
                         case CYLINDER:
                             entityList.add(new Entity(model, pos, 0, 0, 0, 1));
                             break;
                         case SPHERE:
-                            entityList.add(new Entity(model, pos, 0, 0, 0, 1));
+                            Vector3f spherePos = new Vector3f(xPos + sphereXOffset, yPos + sphereYOffset, zPos);
+                            entityList.add(new Entity(model, spherePos, 0, 0, 0, 1));
                             break;
                         case LIGHT:
                             break; //Already added by selection panel

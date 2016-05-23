@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import shaders.terrain.TerrainShader;
+import shaders.StaticShader;
 import terrain.Terrain;
 import textures.ModelTexture;
 import utils.MathUtils;
@@ -16,17 +16,15 @@ import utils.MathUtils;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_NEAREST;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
 
 /**
  * Created by Carter Milch on 5/2/2016.
  */
 public class TerrainRenderer {
 
-    private TerrainShader shader;
+    private StaticShader shader;
 
-    public TerrainRenderer(TerrainShader shader, Matrix4f projMatrix) {
+    public TerrainRenderer(StaticShader shader, Matrix4f projMatrix) {
         this.shader = shader;
         shader.start();
         shader.loadProjectionMatrix(projMatrix);

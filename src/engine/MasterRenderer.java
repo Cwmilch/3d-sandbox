@@ -11,7 +11,6 @@ import models.TexturedModel;
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import shaders.StaticShader;
-import shaders.terrain.TerrainShader;
 import terrain.Terrain;
 import textures.ModelTexture;
 import textures.skybox.SkyboxRenderer;
@@ -43,11 +42,11 @@ public class MasterRenderer {
 
     private Matrix4f projMatrix;
 
-    private StaticShader shader = new StaticShader();
+    private StaticShader shader = new StaticShader(false);
     private EntityRenderer renderer;
 
     private TerrainRenderer terrainRenderer;
-    private TerrainShader terrainShader = new TerrainShader();
+    private StaticShader terrainShader = new StaticShader(true);
 
     private HashMap<TexturedModel, List<Entity>> entities = new HashMap<>();
     private List<Terrain> terrains = new ArrayList<>();

@@ -28,5 +28,4 @@ public class IDButton extends JButton {
     public int getID() {
         return id;
     }
-
 }

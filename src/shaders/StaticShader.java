@@ -16,8 +16,7 @@ public class StaticShader extends AbstractShader{
 
     private static final int MAX_LIGHTS = 10;
 
-    private static final String VERTEX_FILE = "src/shaders/VertexShader.txt";
-    private static final String FRAGMENT_FILE = "src/shaders/FragmentShader.txt";
+    private static final String PREFIX = "src/shaders/";
 
     private int transMatrixLocation;
     private int projMatrixLocation;
@@ -30,9 +29,12 @@ public class StaticShader extends AbstractShader{
     private int[] lightColorLocations;
     private int[] attenuationLocations;
 
+    private boolean terrain;
 
-    public StaticShader(){
-        super(VERTEX_FILE, FRAGMENT_FILE);
+    public StaticShader(boolean terrain){
+        super(PREFIX + (terrain ? "terrain/Terrain" : "") + "VertexShader.txt",
+                PREFIX + (terrain ? "terrain/Terrain" : "") + "FragmentShader.txt");
+        this.terrain = terrain;
     }
 
     @Override
@@ -49,9 +51,10 @@ public class StaticShader extends AbstractShader{
         viewMatrixLocation = super.getUniVariableLocation("viewMatrix");
         shineDamperLocation = super.getUniVariableLocation("shineDamper");
         reflectivityLocation = super.getUniVariableLocation("reflectivity");
-        useFakeLightingLocation = super.getUniVariableLocation("useFakeLighting");
+        if(!terrain) {
+            useFakeLightingLocation = super.getUniVariableLocation("useFakeLighting");
+        }
         skyColorLocation = super.getUniVariableLocation("skyColor");
-
         lightPosLocations = new int[MAX_LIGHTS];
         lightColorLocations = new int[MAX_LIGHTS];
         attenuationLocations = new int[MAX_LIGHTS];

@@ -14,6 +14,9 @@ public class SelectionPanel extends JPanel {
 
     private static boolean warning = false;
 
+
+    private boolean userChange = false;
+
     private GridFrame frame;
     private IDButton button;
 
@@ -27,23 +30,26 @@ public class SelectionPanel extends JPanel {
         shapes = new JComboBox<>();
         textures = new JComboBox<>();
         initBoxes();
-        shapes.setSelectedIndex(Shape.getID(grid.getShapes().get(button.getID())));
         textures.setSelectedIndex(Texture.getID(grid.getTextures().get(button.getID())));
         add(shapes);
         add(textures);
     }
 
     private void initBoxes(){
+        Shape current = frame.getShapes().get(button.getID());
+        shapes.addItem(current.toString());
         for(int i = 0; i < Shape.values().length; i++){
-            shapes.addItem(Shape.getName(i));
+            if(!Shape.getName(i).equals(current.toString())) {
+                shapes.addItem(Shape.getName(i));
+            }
         }
         shapes.addItemListener(e -> {
             Shape s = Shape.getShape(shapes.getSelectedIndex());
             int id = button.getID();
-            if(s == Shape.LIGHT && e.getStateChange() == ItemEvent.SELECTED){
+            if(userChange && s == Shape.LIGHT && e.getStateChange() == ItemEvent.SELECTED){
                 if(GridFrame.getLights().size() == 10){
                     JOptionPane.showMessageDialog(frame, "10 lights is the maximum amount allowed.");
-                }else {
+                }else{
                     if(!warning) {
                         JOptionPane.showMessageDialog(frame, "The higher the light, the larger the area it covers.");
                         warning = true;
@@ -53,16 +59,18 @@ public class SelectionPanel extends JPanel {
                     float zPos = -30 - (frame.getLayer() * 4);
                     Color c = JColorChooser.showDialog(this, "Choose Light Color", Color.WHITE);
                     Vector3f pos = new Vector3f(xPos, yPos, zPos);
-                    float diff = 100 + pos.y;
-                    Vector3f color = new Vector3f(c.getRed() / diff, c.getGreen() / diff, c.getBlue() / diff);
+                    Vector3f color = new Vector3f(c.getRed() / 100, c.getGreen() / 100, c.getBlue() / 100);
                     frame.addLight(new LightSource(pos, color));
                     button.setIcon(null);
                     button.setForeground(c);
                     button.setBackground(c);
                 }
             } else {
+                if(!userChange) {
+                    userChange = true;
+                }
                 frame.modifyShape(id, s);
-                if(textures.getSelectedIndex() != 0){
+                if (textures.getSelectedIndex() != 0) {
                     button.updateIcon(textures.getSelectedItem().toString().toLowerCase());
                     frame.modifyTexture(button.getID(), Texture.getTexture(textures.getSelectedIndex()));
                 }
