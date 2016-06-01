@@ -148,6 +148,7 @@ public class MasterRenderer {
 
     public static TexturedModel getModel(Shape shape, Texture texture){
         String s = shape.toString().toUpperCase();
+        System.out.println(s);
         String t = texture.toString().toUpperCase();
         String var = s + "_" + t;
         return modelMap.get(var);

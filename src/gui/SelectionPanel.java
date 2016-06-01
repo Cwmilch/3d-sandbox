@@ -14,7 +14,6 @@ public class SelectionPanel extends JPanel {
 
     private static boolean warning = false;
 
-
     private boolean userChange = false;
 
     private GridFrame frame;
@@ -30,7 +29,9 @@ public class SelectionPanel extends JPanel {
         shapes = new JComboBox<>();
         textures = new JComboBox<>();
         initBoxes();
-        textures.setSelectedIndex(Texture.getID(grid.getTextures().get(button.getID())));
+        if(grid.getShapes().get(button.getID()) != Shape.LIGHT) {
+            textures.setSelectedIndex(grid.getTextures().get(button.getID()));
+        }
         add(shapes);
         add(textures);
     }
@@ -64,10 +65,18 @@ public class SelectionPanel extends JPanel {
                     button.setIcon(null);
                     button.setForeground(c);
                     button.setBackground(c);
+                    frame.modifyTexture(button.getID(), c.getRGB());
                 }
             } else {
                 if(!userChange) {
                     userChange = true;
+                }
+                if(s != Shape.LIGHT && e.getStateChange() == ItemEvent.SELECTED) {
+                    textures.setSelectedIndex(0);
+                    JButton color = new JButton();
+                    button.setForeground(color.getForeground());
+                    button.setBackground(color.getBackground());
+                    frame.modifyTexture(button.getID(), Texture.BLANK);
                 }
                 frame.modifyShape(id, s);
                 if (textures.getSelectedIndex() != 0) {
@@ -85,6 +94,12 @@ public class SelectionPanel extends JPanel {
             if(index != Shape.values().length - 1 && index != 0) {
                 button.updateIcon(textures.getSelectedItem().toString().toLowerCase());
                 frame.modifyTexture(button.getID(), Texture.getTexture(textures.getSelectedIndex()));
+            }
+            if(textures.getSelectedIndex() == 0){
+                button.setIcon(null);
+                JButton color = new JButton();
+                button.setBackground(color.getBackground());
+                button.setForeground(color.getForeground());
             }
         });
     }

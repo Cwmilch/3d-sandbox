@@ -4,17 +4,19 @@ package gui;
  * Created by Carter Milch on 5/9/2016.
  */
 public enum Shape {
-    AIR("Air"),
-    CUBE("Cube"),
-    SPHERE("Sphere"),
-    CYLINDER("Cylinder"),
-    CONE("Cone"),
-    LIGHT("Light");
+    AIR("Air", 0),
+    CUBE("Cube", 1),
+    SPHERE("Sphere", 2),
+    CYLINDER("Cylinder", 3),
+    CONE("Cone", 4),
+    LIGHT("Light", 5);
 
     private String name;
+    private int id;
 
-    Shape(String name) {
+    Shape(String name, int id) {
         this.name = name;
+        this.id = id;
     }
 
     public static Shape getShape(int i){
@@ -41,20 +43,8 @@ public enum Shape {
         return getShape(i).getName();
     }
 
-    public static int getID(Shape s){
-        switch(s){
-            case CUBE:
-                return 1;
-            case SPHERE:
-                return 2;
-            case CYLINDER:
-                return 3;
-            case CONE:
-                return 4;
-            case LIGHT:
-                return 5;
-        }
-        return 0;
+    public int getID(){
+        return id;
     }
 
     @Override
